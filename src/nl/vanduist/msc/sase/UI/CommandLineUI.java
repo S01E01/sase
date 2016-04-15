@@ -61,8 +61,11 @@ public class CommandLineUI extends edu.umass.cs.sase.UI.CommandLineUI {
         myEngineController.setNfa(queryFileLocation);
 
 
+        long totalRunTime = 0;
+        long totalEventsProcessed = 0;
+
         // repeat multiple times for a constant performance
-        for(int i = 0; i < 20; i ++){
+        for (int i = 0; i < 20; i ++) {
             System.gc();
             System.out.println("\nRepeat No." + (i+1) +" is started...");
 
@@ -75,6 +78,16 @@ public class CommandLineUI extends edu.umass.cs.sase.UI.CommandLineUI {
 
             System.out.println("\nProfiling results for repeat No." + (i+1) +" are as follows:");
             Profiling.printProfiling();
+
+
+            totalRunTime += Profiling.totalRunTime;
+            totalEventsProcessed += Profiling.numberOfEvents;
+        }
+
+
+        if(totalRunTime > 0){
+            long throughput1 = totalEventsProcessed* 1000000000/totalRunTime ;
+            System.out.println("\n\n\nTOTAL Throughput: " + throughput1 + " events/second");
         }
     }
 

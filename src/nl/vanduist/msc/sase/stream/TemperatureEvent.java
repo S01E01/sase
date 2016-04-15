@@ -34,25 +34,35 @@ public class TemperatureEvent extends TemporalEvent {
     /**
      * Temperature attribute
      */
-    private double temperature;
+    private double val;
+
+    /**
+     * Area attribute
+     */
+    private int area;
 
 
     /**
      * Constructor
      */
-    public TemperatureEvent(int id, int timestamp, double temperature) {
+    public TemperatureEvent(int id, int timestamp, int area, double val) {
         super(id, timestamp, "temperature");
 
-        this.temperature = temperature;
+        this.area = area;
+        this.val = val;
     }
 
     public double getTemperature() {
-        return this.temperature;
+        return this.val;
+    }
+
+    public int getArea() {
+        return this.area;
     }
 
     @Override
     public String toString() {
-        return super.toString() + "\tTemperature = " + getTemperature();
+        return super.toString() + "\tArea = " + getArea() + "\tTemperature = " + getTemperature();
     }
 
     @Override
@@ -66,8 +76,23 @@ public class TemperatureEvent extends TemporalEvent {
     }
 
     @Override
+    public int getAttributeByName(String attributeName) {
+        int value = super.getAttributeByName(attributeName);
+
+        if (value != 0) {
+            return value;
+        }
+
+        if (attributeName.equalsIgnoreCase("area")) {
+            return getArea();
+        }
+
+        return 0;
+    }
+
+    @Override
     public double getAttributeByNameDouble(String attributeName) {
-        if(attributeName.equalsIgnoreCase("temperature")) {
+        if (attributeName.equalsIgnoreCase("temperature")) {
             return getTemperature();
         }
 

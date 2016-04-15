@@ -24,7 +24,10 @@
 */
 package nl.vanduist.msc.sase.stream;
 
+import edu.umass.cs.sase.stream.Event;
 import edu.umass.cs.sase.stream.Stream;
+
+import java.util.Random;
 
 /**
  * Created by tomvanduist
@@ -36,16 +39,28 @@ public class TemperatureStreamConfig extends StreamConfig {
      * Generate the event stream
      */
     public Stream generate() {
-        TemperatureEvent events[] = new TemperatureEvent[this.streamSize];
+        Event events[] = new Event[this.streamSize];
 
-        int id;
+        int smokeId = 0;
+        int temperatureId = 0;
         int timestamp;
+        Random r = new Random(this.hashCode());
+        Random tr = new Random(new TemperatureEvent(0,0,0,0).hashCode());
+        Random sr = new Random(new SmokeEvent(0,0,0).hashCode());
 
         for (int i = 0; i < this.streamSize; i++) {
-            id = i;
-            timestamp = id;
+            Event event;
+            timestamp = i;
 
-            events[i] = new TemperatureEvent(id, timestamp, 10 + id);
+            if (r.nextInt(10) > 8) {
+                event = new TemperatureEvent(temperatureId++, timestamp, tr.nextInt(5), tr.nextInt(30));
+            } else {
+                event = new SmokeEvent(smokeId++, timestamp, sr.nextInt(5));
+            }
+
+//            System.out.println(event.toString());
+
+            events[i] = event;
         }
 
         Stream stream = new Stream(this.streamSize);

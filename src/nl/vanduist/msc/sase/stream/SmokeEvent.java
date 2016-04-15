@@ -24,27 +24,54 @@
 */
 package nl.vanduist.msc.sase.stream;
 
-import edu.umass.cs.sase.stream.Stream;
-
 /**
- * Configurates the paramters for generating event streams
- *
  * Created by tomvanduist
  * https://github.com/tomvanduist
  */
-abstract public class StreamConfig {
-    /**
-     * The number of events in the stream
-     */
-    public int streamSize = 100000;
+public class SmokeEvent extends TemporalEvent {
 
     /**
-     * The event type of the stream
+     * Area attribute
      */
-    public String eventType = null;
+    private int area;
 
-    /**
-     * Generate the event stream
-     */
-    abstract public Stream generate();
+    public SmokeEvent(int id, int timestamp, int area) {
+        super(id, timestamp, "smoke");
+
+        this.area = area;
+    }
+
+    public int getArea() {
+        return this.area;
+    }
+
+    @Override
+    public String toString() {
+        return super.toString() + "\tArea = " + getArea();
+    }
+
+    @Override
+    public SmokeEvent clone() {
+        try {
+            return (SmokeEvent)super.clone();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
+        }
+    }
+
+    @Override
+    public int getAttributeByName(String attributeName) {
+        int value = super.getAttributeByName(attributeName);
+
+        if (value != 0) {
+            return value;
+        }
+
+        if (attributeName.equalsIgnoreCase("area")) {
+            return getArea();
+        }
+
+        return 0;
+    }
 }
